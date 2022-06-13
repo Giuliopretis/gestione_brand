@@ -4,10 +4,13 @@
 
 import 'dart:convert';
 
+import 'package:json_annotation/json_annotation.dart';
+
 Brand brandFromJson(String str) => Brand.fromJson(json.decode(str));
 
 String brandToJson(Brand data) => json.encode(data.toJson());
 
+@JsonSerializable()
 class Brand {
   Brand({
     required this.name,
@@ -15,6 +18,7 @@ class Brand {
     required this.createdAt,
   });
 
+  @JsonKey(name: '_id')
   final String name;
   final String id;
   final String createdAt;
