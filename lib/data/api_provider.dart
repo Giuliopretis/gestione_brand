@@ -6,10 +6,18 @@ class ApiProvider {
   final Dio _dio = Dio();
 
   Future<List<Brand>> getBrandList() async {
+    _dio.options.headers = {
+      'authorization': 'Bearer $BEARER_TOKEN',
+      'content-Type': 'application/json'
+    };
     try {
-      Response res = await _dio.get('$PRODUCTION_URL/brands');
-      List<Brand> brands =
-          res.data.map((data) => Brand.fromJson(data)).toList();
+      Response res = await _dio.get(
+        '$PRODUCTION_URL/brands',
+      );
+      List<Brand> brands = [];
+      for (var brand in res.data['data']) {
+        brands.add(Brand.fromJson(brand));
+      }
       return brands;
     } catch (e) {
       rethrow;

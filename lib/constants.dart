@@ -1,3 +1,5 @@
 // ignore_for_file: constant_identifier_names
 
 const String PRODUCTION_URL = 'https://staging.orderpod.app/api/v3';
+const String BEARER_TOKEN =
+    'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJ0bnQiOiI1ZDM2YjljM2U4NzdjNzQ0Mjg2MGU3ZWUiLCJ0eXAiOjEsImlhdCI6MTY1Mjg2Mjg0MywiaXNzIjoib3JkZXJwb2QiLCJzdWIiOiI2Mjg0YWU5Nzc1YTRmNTdkOTFlMTZiNGUiLCJqdGkiOiI2Mjg0YWY3YmE5ZThmZjA0MDI4YWJkZGQifQ.Yh6NWDI2ORuaGvNJyhzzCa4pO1R2i-VTh9IQ_HIiSgIrri6uO4stMLeQD46BUTBz_UZJ3oHBpQsME6U5gBvVXw';
