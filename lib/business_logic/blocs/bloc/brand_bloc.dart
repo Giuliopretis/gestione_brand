@@ -19,8 +19,8 @@ class BrandBloc extends Bloc<BrandEvent, BrandState> {
   void _onLoadBrands(LoadBrands event, Emitter<BrandState> emit) async {
     emit(BrandLoading());
     try {
-      // final phrases = await _apiProvider.getPhrases();
-      // emit(PhrasesLoaded(phrases: phrases));
+      final brands = await _apiProvider.getBrandList();
+      emit(BrandLoaded(brands: brands));
     } catch (e) {
       // emit(PhrasesErrorLoading());
     }
