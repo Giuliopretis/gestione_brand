@@ -5,11 +5,14 @@ import 'package:gestione_brand/data/models/brand.dart';
 class ApiProvider {
   final Dio _dio = Dio();
 
-  Future<List<Brand>> getBrandList() async {
+  ApiProvider() {
     _dio.options.headers = {
       'authorization': 'Bearer $BEARER_TOKEN',
       'content-Type': 'application/json'
     };
+  }
+
+  Future<List<Brand>> getBrandList() async {
     try {
       Response res = await _dio.get(
         '$PRODUCTION_URL/brands',

@@ -12,6 +12,7 @@ class BrandBloc extends Bloc<BrandEvent, BrandState> {
   BrandBloc() : super(BrandLoading()) {
     on<LoadBrands>(_onLoadBrands);
     on<AddBrand>(_onAddBrands);
+    on<SearchBrands>(_onSearchBrands);
     on<UpdateBrand>(_onUpdateBrands);
     on<DeleteBrand>(_onDeleteBrands);
   }
@@ -22,7 +23,7 @@ class BrandBloc extends Bloc<BrandEvent, BrandState> {
       final brands = await _apiProvider.getBrandList();
       emit(BrandLoaded(brands: brands));
     } catch (e) {
-      // emit(PhrasesErrorLoading());
+      // emit(BrandsErrorLoading());
     }
   }
 
@@ -32,7 +33,17 @@ class BrandBloc extends Bloc<BrandEvent, BrandState> {
       // final phrases = await _apiProvider.getPhrases();
       // emit(PhrasesLoaded(phrases: phrases));
     } catch (e) {
-      // emit(PhrasesErrorLoading());
+      // emit(BrandsErrorLoading());
+    }
+  }
+
+  void _onSearchBrands(SearchBrands event, Emitter<BrandState> emit) async {
+    // emit(BrandLoading());
+    try {
+      List<Brand> brands = LoadBrands().props;
+      emit(BrandLoaded(brands: brands));
+    } catch (e) {
+      // emit(BrandsErrorLoading());
     }
   }
 
@@ -42,7 +53,7 @@ class BrandBloc extends Bloc<BrandEvent, BrandState> {
       // final phrases = await _apiProvider.getPhrases();
       // emit(PhrasesLoaded(phrases: phrases));
     } catch (e) {
-      // emit(PhrasesErrorLoading());
+      // emit(BrandsErrorLoading());
     }
   }
 
@@ -52,7 +63,7 @@ class BrandBloc extends Bloc<BrandEvent, BrandState> {
       // final phrases = await _apiProvider.getPhrases();
       // emit(PhrasesLoaded(phrases: phrases));
     } catch (e) {
-      // emit(PhrasesErrorLoading());
+      // emit(BrandsErrorLoading());
     }
   }
 }

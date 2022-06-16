@@ -9,7 +9,7 @@ abstract class BrandState extends Equatable {
 
 class BrandLoading extends BrandState {
   @override
-  List<Object> get props => [];
+  List<Brand> get props => [];
 }
 
 class BrandLoaded extends BrandState {
@@ -18,11 +18,11 @@ class BrandLoaded extends BrandState {
   const BrandLoaded({required this.brands});
 
   @override
-  List<Object> get props => [brands];
+  List<Brand> get props => [];
 }
 
 class BrandLoadingError extends BrandState {
   final String message = 'There was an error on loading list';
   @override
-  List<Object> get props => [message];
+  List<String> get props => [message];
 }

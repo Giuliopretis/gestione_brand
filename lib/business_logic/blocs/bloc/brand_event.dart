@@ -9,7 +9,7 @@ abstract class BrandEvent extends Equatable {
 
 class LoadBrands extends BrandEvent {
   @override
-  List<Object> get props => [];
+  List<Brand> get props => [];
 }
 
 class AddBrand extends BrandEvent {
@@ -19,6 +19,15 @@ class AddBrand extends BrandEvent {
 
   @override
   List<Object> get props => [brand];
+}
+
+class SearchBrands extends BrandEvent {
+  // final List<Brand> brands;
+
+  // const SearchBrands({required this.brands});
+
+  @override
+  List<Brand> get props => [];
 }
 
 class UpdateBrand extends BrandEvent {
