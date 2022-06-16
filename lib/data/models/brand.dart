@@ -21,13 +21,20 @@ class Brand {
   @JsonKey(name: '_id')
   final String name;
   final String id;
-  final String createdAt;
+  final DateTime createdAt;
 
-  factory Brand.fromJson(Map<String, dynamic> json) => Brand(
+  factory Brand.fromJson(Map<String, dynamic> json) {
+    try {
+      Brand gig = Brand(
         name: json["name"],
-        id: json["id"],
-        createdAt: json["created_at"],
+        id: json["_id"],
+        createdAt: DateTime.parse(json["createdAt"]),
       );
+      return gig;
+    } catch (e) {
+      rethrow;
+    }
+  }
 
   Map<String, dynamic> toJson() => {
         "name": name,

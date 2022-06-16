@@ -77,6 +77,7 @@ class _BrandListState extends State<BrandList> {
                                 ),
                                 trailing: const Icon(Icons.record_voice_over),
                                 title: Text(brand.name),
+                                subtitle: Text(brand.createdAt.toString()),
                                 onTap: () {},
                                 // onLongPress: () => _showEditDialog(phrase),
                               ),
