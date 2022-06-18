@@ -27,8 +27,14 @@ class MyApp extends StatelessWidget {
       child: GetMaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          primarySwatch: Colors.amber,
-        ),
+            primarySwatch: Colors.amber,
+            dialogTheme: const DialogTheme(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(16.0),
+                ),
+              ),
+            )),
         home: const HomePage(),
       ),
     );
