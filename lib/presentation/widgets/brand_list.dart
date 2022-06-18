@@ -30,12 +30,14 @@ class _BrandListState extends State<BrandList> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
+      print('recreate');
       // searchBrandsController.isSearching.value ? Center(child: CircularProgressIndicator(),) :
       return Column(
         children: [
           const SizedBox(height: 8),
           SearchBar(
-              hintText: 'Cerca il brand', onSearch: (query) => _searchBrands),
+              hintText: 'Cerca il brand',
+              onSearch: (query) => _searchBrands(query)),
           const SizedBox(height: 8),
           Expanded(
             child: stateController.isLoadingBrands.value
@@ -96,19 +98,20 @@ class _BrandListState extends State<BrandList> {
   }
 
   void _searchBrands(String query) {
+    print('query');
     if (query.isEmpty) {
       searchBrandsController.searchedBrands.clear();
       // setState(() => isSearchingBrand = false);
       searchBrandsController.isSearching.value = false;
       return;
     }
-    setState(() {
-      searchBrandsController.isSearching.value = true;
-      searchBrandsController.searchedBrands.value = [
-        ...stateController.brands
-            .where((element) => element.name.toLowerCase().contains(query))
-      ];
-    });
+    // setState(() {
+    searchBrandsController.isSearching.value = true;
+    searchBrandsController.searchedBrands.value = [
+      ...stateController.brands
+          .where((element) => element.name.toLowerCase().contains(query))
+    ];
+    // });
     return;
   }
 }
