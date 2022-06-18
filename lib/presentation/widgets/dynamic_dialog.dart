@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_is_empty
+
 import 'package:flutter/material.dart';
 import 'package:gestione_brand/data/classes/dialog_action.dart';
 
@@ -22,20 +24,29 @@ class _DynamicDialogState extends State<DynamicDialog> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               for (DialogAction action in widget.actions!)
-                OutlinedButton(
-                  onPressed: () => action.callback(),
-                  style: ElevatedButton.styleFrom(
-                    primary: action.isPositive ? null : Colors.grey.shade500,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24.0),
+                Padding(
+                  padding: widget.actions!.last != action
+                      ? const EdgeInsets.only(right: 4.0)
+                      : EdgeInsets.zero,
+                  child: OutlinedButton(
+                    onPressed: () => action.callback(),
+                    style: ElevatedButton.styleFrom(
+                      primary: action.isPositive
+                          ? Theme.of(context).colorScheme.primary
+                          : Colors.transparent,
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(
+                            width: 4,
+                            color: Theme.of(context).colorScheme.primary),
+                        borderRadius: BorderRadius.circular(24.0),
+                      ),
+                    ),
+                    child: Text(
+                      action.text,
+                      style: const TextStyle(color: Colors.black),
                     ),
                   ),
-                  child: Text(
-                    action.text,
-                    style: TextStyle(
-                        color: action.isPositive ? Colors.white : Colors.black),
-                  ),
-                )
+                ),
             ],
           )
         : const SizedBox();
