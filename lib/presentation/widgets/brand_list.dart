@@ -3,7 +3,12 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestione_brand/business_logic/blocs/bloc/brand_bloc.dart';
+import 'package:gestione_brand/business_logic/states/search_brands_controller.dart';
+import 'package:gestione_brand/business_logic/states/state_controller.dart';
 import 'package:gestione_brand/data/models/brand.dart';
+import 'package:gestione_brand/presentation/widgets/search_bar.dart';
+import 'package:get/get.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
 
 class BrandList extends StatefulWidget {
   const BrandList({Key? key}) : super(key: key);
@@ -13,42 +18,41 @@ class BrandList extends StatefulWidget {
 }
 
 class _BrandListState extends State<BrandList> {
+  StateController stateController = Get.find();
+  SearchBrandsController searchBrandsController = Get.find();
+
+  @override
+  void initState() {
+    super.initState();
+    stateController.loadBrands();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<BrandBloc, BrandState>(
-      builder: (context, state) {
-        if (state is BrandLoading) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-        if (state is BrandLoaded) {
-          return state.brands.isEmpty
-              ? RefreshIndicator(
-                  onRefresh: () async {
-                    BlocProvider.of<BrandBloc>(context).add(LoadBrands());
-                  },
-                  child: SingleChildScrollView(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    child: SizedBox(
-                      height: MediaQuery.of(context).size.height,
-                      width: MediaQuery.of(context).size.width,
-                      child: const Center(
-                        child: Text('No brands found'),
-                      ),
-                    ),
-                  ),
-                )
-              : SizedBox(
-                  child: RefreshIndicator(
-                    onRefresh: () async {
-                      BlocProvider.of<BrandBloc>(context).add(LoadBrands());
-                    },
+    return Obx(() {
+      // searchBrandsController.isSearching.value ? Center(child: CircularProgressIndicator(),) :
+      return Column(
+        children: [
+          const SizedBox(height: 8),
+          SearchBar(
+              hintText: 'Cerca il brand', onSearch: (query) => _searchBrands),
+          const SizedBox(height: 8),
+          Expanded(
+            child: stateController.isLoadingBrands.value
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : RefreshIndicator(
+                    onRefresh: () async => stateController.loadBrands,
                     child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: state.brands.length,
+                        itemCount: searchBrandsController.isSearching.value
+                            ? searchBrandsController.searchedBrands.length
+                            : stateController.brands.length,
+                        physics: const AlwaysScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
-                          Brand brand = state.brands[index];
+                          Brand brand = searchBrandsController.isSearching.value
+                              ? searchBrandsController.searchedBrands[index]
+                              : stateController.brands[index];
                           return Dismissible(
                             background: Container(
                               decoration: const BoxDecoration(
@@ -85,13 +89,26 @@ class _BrandListState extends State<BrandList> {
                           );
                         }),
                   ),
-                );
-        }
-        // if (state is BrandErrorxz) {
+          )
+        ],
+      );
+    });
+  }
 
-        // }
-        return Container();
-      },
-    );
+  void _searchBrands(String query) {
+    if (query.isEmpty) {
+      searchBrandsController.searchedBrands.clear();
+      // setState(() => isSearchingBrand = false);
+      searchBrandsController.isSearching.value = false;
+      return;
+    }
+    setState(() {
+      searchBrandsController.isSearching.value = true;
+      searchBrandsController.searchedBrands.value = [
+        ...stateController.brands
+            .where((element) => element.name.toLowerCase().contains(query))
+      ];
+    });
+    return;
   }
 }

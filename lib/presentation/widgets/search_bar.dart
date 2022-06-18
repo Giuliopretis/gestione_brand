@@ -11,12 +11,12 @@ class SearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     OutlineInputBorder _borderStyle() => const OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.transparent),
+          // borderSide: BorderSide(color: Theme.of(context).st),
           borderRadius: BorderRadius.all(
-            Radius.circular(30),
+            Radius.circular(16),
           ),
         );
-    Brightness brightness = Theme.of(context).brightness;
+    // Brightness brightness = Theme.of(context).brightness;
     final debouncer = Debouncer(milliseconds: 500);
 
     return SizedBox(
