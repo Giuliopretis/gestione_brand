@@ -24,6 +24,11 @@ class _HomePageState extends State<HomePage> {
           Expanded(child: BrandList()),
         ],
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        label: const Text('Aggiungi brand'),
+        icon: const Icon(Icons.add),
+        onPressed: () {},
+      ),
     );
   }
 }
