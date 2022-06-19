@@ -30,14 +30,13 @@ class _DynamicDialogState extends State<DynamicDialog> {
                       : EdgeInsets.zero,
                   child: OutlinedButton(
                     onPressed: () => action.callback(),
-                    style: ElevatedButton.styleFrom(
-                      primary: action.isPositive
+                    style: OutlinedButton.styleFrom(
+                      backgroundColor: action.isPositive
                           ? Theme.of(context).colorScheme.primary
                           : Colors.transparent,
+                      side: BorderSide(
+                          color: Theme.of(context).colorScheme.primary),
                       shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                            width: 4,
-                            color: Theme.of(context).colorScheme.primary),
                         borderRadius: BorderRadius.circular(24.0),
                       ),
                     ),
