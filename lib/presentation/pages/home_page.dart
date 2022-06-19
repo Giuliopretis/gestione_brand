@@ -92,6 +92,12 @@ class _HomePageState extends State<HomePage> {
         children: [
           TextFormField(
             controller: nameController,
+            validator: (input) {
+              if (input!.isEmpty) {
+                return 'Il nome non può essere vuoto';
+              }
+              return null;
+            },
             decoration: const InputDecoration(
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(12)),
