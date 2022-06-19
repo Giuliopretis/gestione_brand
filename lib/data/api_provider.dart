@@ -35,4 +35,13 @@ class ApiProvider {
       rethrow;
     }
   }
+
+  Future<Response> deleteBrand(Brand brand) async {
+    try {
+      Response res = await _dio.delete('$PRODUCTION_URL/brands/${brand.id}');
+      return res;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

@@ -67,6 +67,7 @@ class _HomePageState extends State<HomePage> {
         Get.back();
         return;
       }
+      Get.back();
       showUnsuccessCreatedBrandSnackbar();
     }
   }

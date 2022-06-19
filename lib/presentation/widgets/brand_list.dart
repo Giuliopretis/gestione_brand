@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gestione_brand/business_logic/blocs/bloc/brand_bloc.dart';
 import 'package:gestione_brand/business_logic/states/search_brands_controller.dart';
 import 'package:gestione_brand/business_logic/states/state_controller.dart';
+import 'package:gestione_brand/data/api_provider.dart';
+import 'package:gestione_brand/data/classes/dialog_action.dart';
 import 'package:gestione_brand/data/models/brand.dart';
+import 'package:gestione_brand/presentation/widgets/dynamic_dialog.dart';
 import 'package:gestione_brand/presentation/widgets/search_bar.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
 
 class BrandList extends StatefulWidget {
   const BrandList({Key? key}) : super(key: key);
@@ -20,6 +18,7 @@ class BrandList extends StatefulWidget {
 class _BrandListState extends State<BrandList> {
   StateController stateController = Get.find();
   SearchBrandsController searchBrandsController = Get.find();
+  ApiProvider apiProvider = ApiProvider();
 
   @override
   void initState() {
@@ -30,7 +29,6 @@ class _BrandListState extends State<BrandList> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      // searchBrandsController.isSearching.value ? Center(child: CircularProgressIndicator(),) :
       return Column(
         children: [
           const SizedBox(height: 8),
@@ -64,8 +62,7 @@ class _BrandListState extends State<BrandList> {
                               ),
                             ),
                             onDismissed: (direction) {
-                              BlocProvider.of<BrandBloc>(context)
-                                  .add(DeleteBrand(brand: brand));
+                              _showDeleteDialog(brand);
                             },
                             key: UniqueKey(),
                             child: Card(
@@ -94,6 +91,55 @@ class _BrandListState extends State<BrandList> {
         ],
       );
     });
+  }
+
+  void _showDeleteDialog(brand) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) {
+          return DynamicDialog(
+            title: 'Eliminare questo brand?',
+            actions: [
+              DialogAction(
+                  text: 'No',
+                  callback: () {
+                    Get.back();
+                    setState(() {});
+                  },
+                  isPositive: false),
+              DialogAction(
+                  text: 'Si',
+                  callback: () => _deleteBrand(brand),
+                  isPositive: true),
+            ],
+          );
+        });
+  }
+
+  void _deleteBrand(brand) async {
+    var res = await apiProvider.deleteBrand(brand);
+    if (res.statusCode == 204 || res.statusCode == 201) {
+      Get.back();
+      showSuccessDeletedBrandSnackbar();
+      return;
+    }
+    Get.back();
+    showUnsuccessDeletedBrandSnackbar();
+  }
+
+  void showSuccessDeletedBrandSnackbar() {
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text('Brand eliminato con successo'),
+      backgroundColor: Colors.green,
+    ));
+  }
+
+  void showUnsuccessDeletedBrandSnackbar() {
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text('Errore durante l\'eliminazione'),
+      backgroundColor: Colors.red,
+    ));
   }
 
   void _searchBrands(String query) {
