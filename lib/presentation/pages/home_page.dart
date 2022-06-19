@@ -41,7 +41,9 @@ class _HomePageState extends State<HomePage> {
               title: 'Aggiungere un brand',
               actions: [
                 DialogAction(
-                    text: 'Annulla', callback: () {}, isPositive: false),
+                    text: 'Annulla',
+                    callback: () => Get.back(),
+                    isPositive: false),
                 DialogAction(
                     text: 'Aggiungi', callback: () {}, isPositive: true),
               ],

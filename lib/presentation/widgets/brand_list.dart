@@ -30,7 +30,6 @@ class _BrandListState extends State<BrandList> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      print('recreate');
       // searchBrandsController.isSearching.value ? Center(child: CircularProgressIndicator(),) :
       return Column(
         children: [
@@ -98,7 +97,6 @@ class _BrandListState extends State<BrandList> {
   }
 
   void _searchBrands(String query) {
-    print('query');
     if (query.isEmpty) {
       searchBrandsController.searchedBrands.clear();
       // setState(() => isSearchingBrand = false);
