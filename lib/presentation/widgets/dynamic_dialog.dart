@@ -51,13 +51,8 @@ class _DynamicDialogState extends State<DynamicDialog> {
         : const SizedBox();
   }
 
-  Widget _title() => widget.title != null
-      ? Text(
-          widget.title!,
-          style: Theme.of(context).textTheme.headline5,
-          textAlign: TextAlign.center,
-        )
-      : const SizedBox();
+  Widget _title() =>
+      widget.title != null ? Text(widget.title!) : const SizedBox();
 
   @override
   Widget build(BuildContext context) {

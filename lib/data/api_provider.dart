@@ -26,4 +26,13 @@ class ApiProvider {
       rethrow;
     }
   }
+
+  Future<Response> createBrand(Map data) async {
+    try {
+      Response res = await _dio.post('$PRODUCTION_URL/brands', data: data);
+      return res;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
