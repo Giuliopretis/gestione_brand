@@ -20,6 +20,9 @@ class _BrandListState extends State<BrandList> {
   SearchBrandsController searchBrandsController = Get.find();
   ApiProvider apiProvider = ApiProvider();
 
+  final formKey = GlobalKey<FormState>();
+  TextEditingController nameController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -42,7 +45,7 @@ class _BrandListState extends State<BrandList> {
                     child: CircularProgressIndicator(),
                   )
                 : RefreshIndicator(
-                    onRefresh: () async => stateController.loadBrands,
+                    onRefresh: () async => stateController.loadBrands(),
                     child: ListView.builder(
                         itemCount: searchBrandsController.isSearching.value
                             ? searchBrandsController.searchedBrands.length
@@ -81,7 +84,7 @@ class _BrandListState extends State<BrandList> {
                                 title: Text(brand.name),
                                 subtitle: Text(brand.createdAt.toString()),
                                 onTap: () {},
-                                // onLongPress: () => _showEditDialog(phrase),
+                                onLongPress: () => _showUpdateDialog(brand),
                               ),
                             ),
                           );
@@ -117,10 +120,72 @@ class _BrandListState extends State<BrandList> {
         });
   }
 
+  void _showUpdateDialog(brand) {
+    showDialog(
+        context: context,
+        builder: (_) {
+          return DynamicDialog(
+            title: 'Modificare questo brand?',
+            content: _updateBrandContentWidget(brand),
+            actions: [
+              DialogAction(
+                  text: 'No', callback: () => Get.back(), isPositive: false),
+              DialogAction(
+                  text: 'Si',
+                  callback: () => _updateBrand(brand),
+                  isPositive: true),
+            ],
+          );
+        });
+  }
+
+  Widget _updateBrandContentWidget(Brand brand) {
+    nameController.text = brand.name;
+
+    return Form(
+      key: formKey,
+      child: Column(
+        children: [
+          TextFormField(
+            controller: nameController,
+            validator: (input) {
+              if (input!.isEmpty) {
+                return 'Il nome non può essere vuoto';
+              }
+              return null;
+            },
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(12)),
+              ),
+              label: Text('Nome'),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _updateBrand(brand) async {
+    bool isValidName = formKey.currentState!.validate();
+    if (isValidName) {
+      var res = await apiProvider.updateBrand(brand, nameController.text);
+      if (res.statusCode == 200 || res.statusCode == 201) {
+        Get.back();
+        stateController.loadBrands();
+        showSuccessDeletedBrandSnackbar();
+        return;
+      }
+      Get.back();
+      showUnsuccessDeletedBrandSnackbar();
+    }
+  }
+
   void _deleteBrand(brand) async {
     var res = await apiProvider.deleteBrand(brand);
     if (res.statusCode == 204 || res.statusCode == 201) {
       Get.back();
+      stateController.loadBrands();
       showSuccessDeletedBrandSnackbar();
       return;
     }
@@ -138,6 +203,20 @@ class _BrandListState extends State<BrandList> {
   void showUnsuccessDeletedBrandSnackbar() {
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
       content: Text('Errore durante l\'eliminazione'),
+      backgroundColor: Colors.red,
+    ));
+  }
+
+  void showSuccessUpdateBrandSnackbar() {
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text('Brand aggiornato con successo'),
+      backgroundColor: Colors.green,
+    ));
+  }
+
+  void showUnsuccessUpdateBrandSnackbar() {
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text('Errore durante la modifica'),
       backgroundColor: Colors.red,
     ));
   }

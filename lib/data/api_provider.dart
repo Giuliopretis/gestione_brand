@@ -44,4 +44,16 @@ class ApiProvider {
       rethrow;
     }
   }
+
+  Future<Response> updateBrand(Brand brand, String name) async {
+    try {
+      Response res = await _dio.put(
+        '$PRODUCTION_URL/brands/${brand.id}',
+        data: {'name': name},
+      );
+      return res;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
